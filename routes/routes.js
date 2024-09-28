@@ -51,7 +51,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/users', (req, res) => {
-    RegisterUser.find().select('email')  // Select only 'email' and 'username', exclude '_id' if needed
+    RegisterUser.find().select('email username'  )  // Select only 'email' and 'username', exclude '_id' if needed
     .then(users => {
         res.status(200).json({
             data: users  // Directly return users since we already selected the fields
