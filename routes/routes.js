@@ -50,7 +50,6 @@ router.post('/login', (req, res) => {
     });
 });
 
-
 router.get('/users', (req, res) => {
     RegisterUser.find()
     .then(users => {
