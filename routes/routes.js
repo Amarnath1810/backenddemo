@@ -52,11 +52,13 @@ router.post('/login', (req, res) => {
 
 
 router.get('/users', (req, res) => {
-    // Fetch all users from the database
     RegisterUser.find()
     .then(users => {
         res.status(200).json({
-            data: users 
+            data:{
+                email: users.email,
+                username: users.username
+            }
         });
     })
     .catch(error => {
