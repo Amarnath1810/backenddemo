@@ -52,9 +52,18 @@ router.post('/login', (req, res) => {
 
 
 router.get('/users', (req, res) => {
-    console.log(req.query)
-    return res.status(200).json({
-        data: req.query 
+    // Fetch all users from the database
+    RegisterUser.find()
+    .then(users => {
+        res.status(200).json({
+            data: users 
+        });
+    })
+    .catch(error => {
+        res.status(500).json({ 
+            error: 'An error occurred while fetching users', 
+            details: error.message 
+        });
     });
 });
 
