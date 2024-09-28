@@ -3,17 +3,30 @@ const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = 'your_secret_key'; // Replace with a strong secret key
-
+const SECRET_KEY = 'your_secret_key';
 router.post('/register', (req, res) => {
-    RegisterUser.create(req.body)
-    .then((user) => {
-        return res.status(201).json({ message: 'Registration successful', user });
+    // Check if user already exists based on email or another unique field
+    RegisterUser.findOne({ email: req.body.email })
+    .then((existingUser) => {
+        if (existingUser) {
+            // If user already exists, return an error message
+            return res.status(400).json({ error: 'User already registered' });
+        }
+
+        // If no user exists, proceed with registration
+        RegisterUser.create(req.body)
+        .then((user) => {
+            return res.status(201).json({ message: 'Registration successful', user });
+        })
+        .catch((error) => {
+            return res.status(500).json({ error: 'An error occurred while registering the user' });
+        });
     })
     .catch((error) => {
-        return res.status(500).json({ error: 'An error occurred while registering the user' });
+        return res.status(500).json({ error: 'An error occurred while checking the user' });
     });
 });
+
 
 // User login
 router.post('/login', (req, res) => {
@@ -34,6 +47,14 @@ router.post('/login', (req, res) => {
     })
     .catch((error) => {
         return res.status(500).json({ error: 'An error occurred while logging in', details: error.message });
+    });
+});
+
+
+router.get('/users', (req, res) => {
+    console.log(req.query)
+    return res.status(200).json({
+        data: req.query 
     });
 });
 
